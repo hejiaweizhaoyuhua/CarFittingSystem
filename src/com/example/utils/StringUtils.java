@@ -1,4 +1,4 @@
-package com.example.network;
+package com.example.utils;
 
 import java.util.HashMap;
 import java.util.Iterator;

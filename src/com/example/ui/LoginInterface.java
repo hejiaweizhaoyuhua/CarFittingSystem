@@ -2,38 +2,39 @@ package com.example.ui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.io.IOException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import okhttp3.Call;
-import okhttp3.Response;
-
 import com.example.component.RadiusJButton;
 import com.example.component.RoundRectBorder;
 import com.example.component.RoundRectPanel;
-import com.example.network.NetCallback;
-import com.example.network.OkHttpUtils;
 
 public class LoginInterface {
 	private JFrame mainFrame;
 	
 	private int screenWidth, screenHeight;
 	private final int width, height;
+	
+	private RoundRectPanel jPanel;
+	private JPanel borderJPanel;
+	
+	private JLabel userLogin;
+	private JLabel userName;
+	private JTextField userNameField;
+	private JLabel password;
+	private JPasswordField passwordField;
+	
+	private RadiusJButton loginButton;
+	private RadiusJButton exitButton;
 	
 	public LoginInterface(){
 		mainFrame = new JFrame("ÆûÅä²éÑ¯ÏµÍ³");
@@ -108,7 +109,7 @@ public class LoginInterface {
 		int panelHeight = 260;
 		
 		// ÈÝÆ÷
-		RoundRectPanel jPanel = new RoundRectPanel(0, 0);
+		jPanel = new RoundRectPanel(0, 0);
 		jPanel.setSize(panelWidth, panelHeight);
 		jPanel.setLocation((width - panelWidth) / 2, 
 				(height - panelHeight + 30) / 2);
@@ -119,7 +120,7 @@ public class LoginInterface {
 	    mainFrame.add(jPanel);
 	    
 	    // ÈÝÆ÷±ß¿ò
- 		JPanel borderJPanel = new JPanel();
+ 		borderJPanel = new JPanel();
  		borderJPanel.setSize(panelWidth + 10, panelHeight + 10);
  		borderJPanel.setLocation((width - panelWidth) / 2 - 5, 
  				(height - panelHeight + 30) / 2 - 5);
@@ -128,7 +129,7 @@ public class LoginInterface {
  		mainFrame.add(borderJPanel);
 	    
 	    // ÓÃ»§µÇÂ½×ÖÌå
-	    JLabel userLogin = new JLabel("ÓÃ»§µÇÂ½    User Login");
+	    userLogin = new JLabel("ÓÃ»§µÇÂ½    User Login");
 	    userLogin.setLocation(20, 25);
 	    userLogin.setSize(250, 25);
 	    userLogin.setFont(new Font("Î¢ÈíÐ±ºÚ", Font.BOLD, 21));
@@ -137,13 +138,13 @@ public class LoginInterface {
 	    jPanel.add(userLogin);
 	    
 	    // ÓÃ»§Ãû
-	    JLabel userName = new JLabel("ÓÃ»§Ãû£º");
+	    userName = new JLabel("ÓÃ»§Ãû£º");
 	    userName.setLocation(20, 90);
 	    userName.setSize(80, 25);
 	    userName.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 19));
 	    userName.setForeground(new Color(0, 0, 255));
 	    
-	    JTextField userNameField = new JTextField();
+	    userNameField = new JTextField();
 	    userNameField.setSize(120, 25);
 	    userNameField.setLocation(100, 90);
 	    
@@ -151,13 +152,13 @@ public class LoginInterface {
 	    jPanel.add(userNameField);
 	    
 	    // ÃÜÂë
-	    JLabel password = new JLabel("ÃÜÂë£º");
+	    password = new JLabel("ÃÜÂë£º");
 	    password.setLocation(20, 150);
 	    password.setSize(80, 25);
 	    password.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 19));
 	    password.setForeground(new Color(0, 0, 255));
 	    
-	    JPasswordField passwordField = new JPasswordField();
+	    passwordField = new JPasswordField();
 	    passwordField.setSize(120, 25);
 	    passwordField.setLocation(100, 150);
 	    
@@ -165,7 +166,7 @@ public class LoginInterface {
 	    jPanel.add(passwordField);
 	    
 	    // µÇÂ½
-	    RadiusJButton loginButton = new RadiusJButton("µÇÂ¼");
+	    loginButton = new RadiusJButton("µÇÂ¼");
 	    loginButton.setLocation(70, 210);
 	    loginButton.setSize(80, 30);
 	    loginButton.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 17));
@@ -173,33 +174,47 @@ public class LoginInterface {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				QueryInterface queryInterface = new QueryInterface();
-//				queryInterface.showGUI();
-//				
-//				mainFrame.setVisible(false);
+				QueryInterface queryInterface = new QueryInterface();
+				queryInterface.showGUI();
 				
-				OkHttpUtils.get("https://raw.github.com/square/" +
-						"okhttp/master/README.md", new NetCallback(){
-
-							@Override
-							public void onFailure(Call arg0, IOException arg1) {
-								super.onFailure(arg0, arg1);
-							}
-
-							@Override
-							public void onResponse(Call arg0, Response arg1)
-									throws IOException {
-								super.onResponse(arg0, arg1);
-							}
-					
-				});
+				mainFrame.setVisible(false);
+				
+//				OkHttpUtils.get("https://raw.github.com/square/" +
+//						"okhttp/master/README.md", new NetCallback(){
+//
+//							@Override
+//							public void onFailure(Call arg0, IOException arg1) {
+//								super.onFailure(arg0, arg1);
+//							}
+//
+//							@Override
+//							public void onResponse(Call arg0, Response arg1)
+//									throws IOException {
+//								super.onResponse(arg0, arg1);
+//							}
+//					
+//				});
+				
+//				OkHttpUtils.download("http://www.zhlzw.com/UploadFiles/Article_UploadFiles/201204/20120412123904521.jpg", 
+//						new FileDownloadCallback() {
+//					
+//					@Override
+//					public void downloadSuccess(String path) {
+//						
+//					}
+//					
+//					@Override
+//					public void downloadFail(String error) {
+//						
+//					}
+//				});
 			}
 		});
 	    
 	    jPanel.add(loginButton);
 	    
 	    //È¡Ïû
-	    RadiusJButton exitButton = new RadiusJButton("È¡Ïû");
+	    exitButton = new RadiusJButton("È¡Ïû");
 	    exitButton.setLocation(210, 210);
 	    exitButton.setSize(80, 30);
 	    exitButton.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 17));
