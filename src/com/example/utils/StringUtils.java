@@ -5,6 +5,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class StringUtils {
+	/**
+	 * url∆¥Ω”
+	 * @param url
+	 * @param map
+	 * @return
+	 */
 	public static String convertUrl(String url, 
 			HashMap<String, String> map){
 		String result = url + "?";

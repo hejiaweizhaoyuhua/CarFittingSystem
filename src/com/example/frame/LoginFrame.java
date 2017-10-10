@@ -1,4 +1,4 @@
-package com.example.ui;
+package com.example.frame;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -18,7 +18,7 @@ import com.example.component.RadiusJButton;
 import com.example.component.RoundRectBorder;
 import com.example.component.RoundRectPanel;
 
-public class LoginInterface {
+public class LoginFrame {
 	private JFrame mainFrame;
 	
 	private int screenWidth, screenHeight;
@@ -36,7 +36,7 @@ public class LoginInterface {
 	private RadiusJButton loginButton;
 	private RadiusJButton exitButton;
 	
-	public LoginInterface(){
+	public LoginFrame(){
 		mainFrame = new JFrame("ÆûÅä²éÑ¯ÏµÍ³");
 		
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -174,7 +174,7 @@ public class LoginInterface {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				QueryInterface queryInterface = new QueryInterface();
+				QueryFrame queryInterface = new QueryFrame();
 				queryInterface.showGUI();
 				
 				mainFrame.setVisible(false);

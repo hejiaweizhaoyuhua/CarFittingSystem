@@ -1,10 +1,10 @@
 package com.example.main;
 
-import com.example.ui.LoginInterface;
+import com.example.frame.LoginFrame;
 
 public class SystemMain {
 	public static void main(String[] args) {
-		LoginInterface loginInterface = new LoginInterface();
+		LoginFrame loginInterface = new LoginFrame();
 		loginInterface.showGUI();
 	}
 }
