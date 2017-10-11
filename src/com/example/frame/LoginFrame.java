@@ -2,11 +2,14 @@ package com.example.frame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,6 +20,11 @@ import javax.swing.JTextField;
 import com.example.component.RadiusJButton;
 import com.example.component.RoundRectBorder;
 import com.example.component.RoundRectPanel;
+import com.example.constants.DataConstants;
+import com.example.constants.PathConstants;
+import com.example.entity.CarTypeEntity;
+import com.example.utils.FileUtils;
+import com.example.utils.JsonUtils;
 
 public class LoginFrame {
 	private JFrame mainFrame;
@@ -208,6 +216,39 @@ public class LoginFrame {
 //						
 //					}
 //				});
+				
+//				CarTypeEntity entity = new CarTypeEntity();
+//				entity.setAaa("111");
+//				entity.setBbb("999");
+//				entity.setCcc("333");
+//				entity.setDdd("444");
+//				ArrayList<String> list = new ArrayList<>();
+//				list.add("111");
+//				list.add("333");
+//				list.add("555");
+//				list.add("999");
+//				entity.setEee(list);
+//				
+//				try {
+//					FileUtils.writeToFile(PathConstants.DATA_PATH, 
+//							DataConstants.CAR_TYPE, 
+//							JsonUtils.toJson(entity));
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
+				
+//				try {
+//					String content = FileUtils.readFile(
+//							PathConstants.DATA_PATH, 
+//							DataConstants.CAR_TYPE);
+//					CarTypeEntity entity = JsonUtils.formJson(
+//							content, CarTypeEntity.class); 
+//					
+//					System.out.println("entity=" + entity.getEee());
+//				} catch (Exception e2) {
+//					// TODO: handle exception
+//					e2.printStackTrace();
+//				}
 			}
 		});
 	    

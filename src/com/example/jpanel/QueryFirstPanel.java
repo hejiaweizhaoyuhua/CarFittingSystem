@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.LayoutManager;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 

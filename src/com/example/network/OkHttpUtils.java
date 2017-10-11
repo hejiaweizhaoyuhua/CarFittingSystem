@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.example.callback.FileDownloadCallback;
 import com.example.callback.NetCallback;
-import com.example.constants.Constants;
+import com.example.constants.PathConstants;
 import com.example.utils.MD5Utils;
 import com.example.utils.StringUtils;
 
@@ -96,11 +96,12 @@ public class OkHttpUtils {
 		System.out.println("picture url=" + url);
 		
 		final String fileName = MD5Utils.EncodeByMD5(url);
-		File file1 = new File(Constants.PATH);
+		File file1 = new File(PathConstants.PIC_PATH);
 		if (file1 != null && !file1.exists()){
 			file1.mkdirs();
 		}
-		final File file2 = new File(Constants.PATH + fileName + ".png");
+		final File file2 = new File(PathConstants.PIC_PATH + 
+				fileName + ".png");
 		if (file2 != null && file2.exists()){
 			System.out.println("文件已存在！");
 			callback.downloadSuccess(file2.getPath());
