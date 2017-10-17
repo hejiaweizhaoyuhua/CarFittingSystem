@@ -65,25 +65,26 @@ public class OkHttpUtils {
 	public static void post(final String url, 
 			final HashMap<String, String> map, 
 			final NetCallback callback){
+		System.out.println("url=" + url);
 		
-			FormBody.Builder builder = new FormBody.Builder();
-			Iterator iterator = map.entrySet().iterator();
-			while (iterator.hasNext()){
-				Map.Entry<String, String> entry = 
-						(Map.Entry) iterator.next();
-				String name = entry.getKey();
-				String value = entry.getValue();
-				builder.add(name, value);
-			}
-			
-			RequestBody requestBody = builder.build();
-			
-			Request request = new Request.Builder()
-					.url(url)
-					.post(requestBody)
-					.build();
-			
-			client.newCall(request).enqueue(callback);
+		FormBody.Builder builder = new FormBody.Builder();
+		Iterator iterator = map.entrySet().iterator();
+		while (iterator.hasNext()){
+			Map.Entry<String, String> entry = 
+					(Map.Entry) iterator.next();
+			String name = entry.getKey();
+			String value = entry.getValue();
+			builder.add(name, value);
+		}
+		
+		RequestBody requestBody = builder.build();
+		
+		Request request = new Request.Builder()
+				.url(url)
+				.post(requestBody)
+				.build();
+		
+		client.newCall(request).enqueue(callback);
 	}
 	
 	/**
@@ -105,6 +106,7 @@ public class OkHttpUtils {
 		if (file2 != null && file2.exists()){
 			System.out.println("文件已存在！");
 			callback.downloadSuccess(file2.getPath());
+			return;
 		}
 		
 		Request request = new Request.Builder()

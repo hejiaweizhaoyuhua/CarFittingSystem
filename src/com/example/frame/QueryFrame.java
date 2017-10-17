@@ -1,9 +1,7 @@
 package com.example.frame;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
-import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -11,21 +9,28 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
+import okhttp3.Call;
+
+import com.example.callback.NetCallback;
+import com.example.constants.DataConstants;
+import com.example.constants.PathConstants;
+import com.example.constants.URLConstans;
+import com.example.entity.CarTypeDataEntity;
+import com.example.entity.respone.CarTypeEntity;
 import com.example.jpanel.QueryFirstPanel;
 import com.example.jpanel.QuerySecondPanel;
 import com.example.jpanel.QueryThirdPanel;
+import com.example.network.OkHttpUtils;
+import com.example.utils.FileUtils;
+import com.example.utils.JsonUtils;
 
 public class QueryFrame {
 	private JFrame mainFrame;
@@ -37,7 +42,8 @@ public class QueryFrame {
 	
 	private JLabel carTypeLabel;
 	private JComboBox<String> carTypeBox;
-	private String carType;
+	
+	private List<CarTypeEntity.Data> data;
 	
 	/*****************车型年款查询********************/
 	private JLabel firstLabel;
@@ -65,6 +71,8 @@ public class QueryFrame {
 		prepareMainFrameUI();
 		prepareLab();
 		prepareMainFrame();
+		
+		getCarTypeData();
 	}
 	
 	private void prepareMainFrame(){
@@ -100,26 +108,21 @@ public class QueryFrame {
 		carTypeBox.setOpaque(true);
 		carTypeBox.setBackground(Color.WHITE);
 		
-		carTypeBox.addItem("保时捷");
-		carTypeBox.addItem("奔驰");
-		carTypeBox.addItem("法拉利");
-		
-		setSelectItem(carTypeBox.getItemAt(0));
-		
 		carTypeBox.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				setSelectItem((String) e.getItem());
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					firstPanel.setCarCodeAndAudi(
+							data.get(carTypeBox.getSelectedIndex()).
+							getCarCode(), 
+							data.get(carTypeBox.getSelectedIndex()).
+							getArea());
+				}
 			}
 		});
 		
 		mainFrame.add(carTypeBox);
-	}
-	
-	private void setSelectItem(String item){
-		carType = item;
-		System.out.println("选择的车型为：" + carType);
 	}
 	
 	private void prepareLab(){
@@ -170,6 +173,57 @@ public class QueryFrame {
 		mainFrame.add(thirdPanel);
 		
 		switchLab(1);
+	}
+	
+	/**
+	 * 获取大分类信息
+	 */
+	private void getCarTypeData(){
+		OkHttpUtils.get(URLConstans.URL_CAR_TYPE, new NetCallback() {
+			
+			@Override
+			public void onResponseSuccess(String result) {
+				CarTypeEntity entity = JsonUtils.formJson(result, 
+						CarTypeEntity.class);
+				data = entity.getData();
+				
+				if (data != null) {
+					for (int i = 0; i < data.size(); i++) {
+						// 添加信息到控件中
+						carTypeBox.addItem(data.get(i).getArea());
+					}
+					
+					CarTypeDataEntity entity2 = null;
+					try {
+						String fileData = FileUtils.readFile(
+								PathConstants.DATA_PATH, 
+								DataConstants.CAR_TYPE);
+						entity2 = JsonUtils.formJson(
+								fileData, CarTypeDataEntity.class);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					// 获取汽车分类信息
+					if (entity2 != null) {
+						carTypeBox.setSelectedIndex(
+								entity2.getCarTypeCount());
+					}
+				}
+			}
+			
+			@Override
+			public void onResponseFail(String result, String failReason) {
+				System.out.println("fail--->result" + result);
+				System.out.println("failReason=" + failReason);
+			}
+			
+			@Override
+			public void onFail(Call arg0, IOException arg1) {
+				
+			}
+
+		});
 	}
 	
 	private void switchLab(int num){
@@ -265,31 +319,26 @@ public class QueryFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
 			switchLab(num);
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
 			onMouseEntered(num);
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
 			onMouseExited(num);
 		}
 		

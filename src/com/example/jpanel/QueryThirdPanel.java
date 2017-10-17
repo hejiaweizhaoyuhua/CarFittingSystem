@@ -2,19 +2,26 @@ package com.example.jpanel;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
+import com.example.callback.FileDownloadCallback;
 import com.example.component.RadiusJButton;
+import com.example.network.OkHttpUtils;
 
 public class QueryThirdPanel extends BaseJPanel{
 	private JComboBox<String> fittingsCode;
@@ -22,6 +29,7 @@ public class QueryThirdPanel extends BaseJPanel{
 	
 	private JLabel carTypeJLabel;
 	private JList<String> carTypeResult;
+	private JScrollPane carTypesScrollPane;
 	private JLabel fittingsPicture;
 	
 	public QueryThirdPanel(int LocationX, int LocationY, int width, 
@@ -34,6 +42,7 @@ public class QueryThirdPanel extends BaseJPanel{
 		prepareFittingsQuery();
 		prepareCarTypeResult();
 		prepareFittingsPicture();
+		showPicture();
 	}
 	
 	private void prepareFittingsQuery(){
@@ -96,12 +105,17 @@ public class QueryThirdPanel extends BaseJPanel{
 		add(carTypeJLabel);
 		
 		carTypeResult = new JList<>();
-		carTypeResult.setLocation(100, 85);
-		carTypeResult.setSize(250, 370);
-		carTypeResult.setBorder(BorderFactory.createLineBorder(
+		carTypeResult.setSelectionMode(
+				ListSelectionModel.SINGLE_SELECTION);
+		carTypeResult.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 12));
+		
+		carTypesScrollPane = new JScrollPane(carTypeResult);
+		carTypesScrollPane.setLocation(100, 85);
+		carTypesScrollPane.setSize(250, 370);
+		carTypesScrollPane.setBorder(BorderFactory.createLineBorder(
 				Color.BLACK, 1));
 		
-		add(carTypeResult);
+		add(carTypesScrollPane);
 	}
 	
 	private void prepareFittingsPicture(){
@@ -114,5 +128,30 @@ public class QueryThirdPanel extends BaseJPanel{
 				Color.BLACK, 1));
 		
 		add(fittingsPicture);
+	}
+	
+	private void showPicture(){
+		OkHttpUtils.download("http://www.zhlzw.com/UploadFiles/Article_UploadFiles/201204/20120412123904521.jpg", 
+				new FileDownloadCallback() {
+			
+			@Override
+			public void downloadSuccess(String path) {
+				showImage(path);
+			}
+			
+			@Override
+			public void downloadFail(String error) {
+				
+			}
+		});
+	}
+	
+	private void showImage(final String path){
+		ImageIcon icon = new ImageIcon(path);
+		icon = new ImageIcon(icon.getImage().
+				getScaledInstance(fittingsPicture.getWidth(), 
+				fittingsPicture.getHeight(), 
+				Image.SCALE_DEFAULT));
+		fittingsPicture.setIcon(icon);
 	}
 }

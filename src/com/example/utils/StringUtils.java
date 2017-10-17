@@ -28,4 +28,12 @@ public class StringUtils {
 		
 		return result;
 	}
+	
+	public static boolean isNull(String str){
+		if (str == null || str.length() == 0 || str.equals(" ")) {
+			return true;
+		}
+		
+		return false;
+	}
 }

@@ -2,29 +2,37 @@ package com.example.frame;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import okhttp3.Call;
+
+import com.example.callback.NetCallback;
 import com.example.component.RadiusJButton;
 import com.example.component.RoundRectBorder;
 import com.example.component.RoundRectPanel;
+import com.example.component.WaitingDialog;
 import com.example.constants.DataConstants;
 import com.example.constants.PathConstants;
-import com.example.entity.CarTypeEntity;
+import com.example.constants.URLConstans;
+import com.example.entity.UserDataEntity;
+import com.example.entity.respone.LoginEntity;
+import com.example.network.OkHttpUtils;
 import com.example.utils.FileUtils;
 import com.example.utils.JsonUtils;
+import com.example.utils.StringUtils;
 
 public class LoginFrame {
 	private JFrame mainFrame;
@@ -44,6 +52,8 @@ public class LoginFrame {
 	private RadiusJButton loginButton;
 	private RadiusJButton exitButton;
 	
+	private WaitingDialog dialog;
+	
 	public LoginFrame(){
 		mainFrame = new JFrame("汽配查询系统");
 		
@@ -54,6 +64,7 @@ public class LoginFrame {
 	}
 	
 	public void showGUI(){
+		prepareDialog();
 		prepareTitle();
 		preparePanel();
 		// 如果不放到最后，控件显示会出现不全的问题
@@ -72,10 +83,8 @@ public class LoginFrame {
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 				System.exit(0);
 			}
-			
 		});
 		
 		mainFrame.getContentPane().setBackground(new Color(0, 169, 222));
@@ -116,6 +125,20 @@ public class LoginFrame {
 		int panelWidth = 370; 
 		int panelHeight = 260;
 		
+		// 读取上次登录的用户名
+		String username = null;
+		try {
+			String data = FileUtils.readFile(PathConstants.DATA_PATH, 
+					DataConstants.USERNAME);
+			if (!StringUtils.isNull(data)) {
+				UserDataEntity entity = JsonUtils.formJson(data, 
+						UserDataEntity.class);
+				username = entity.getUsername();
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
 		// 容器
 		jPanel = new RoundRectPanel(0, 0);
 		jPanel.setSize(panelWidth, panelHeight);
@@ -155,6 +178,10 @@ public class LoginFrame {
 	    userNameField = new JTextField();
 	    userNameField.setSize(120, 25);
 	    userNameField.setLocation(100, 90);
+	    if (!StringUtils.isNull(username)) {
+			userNameField.setText(username);
+		}
+	    userNameField.setCaretPosition(userNameField.getText().length());
 	    
 	    jPanel.add(userName);
 	    jPanel.add(userNameField);
@@ -182,73 +209,74 @@ public class LoginFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+//				if (StringUtils.isNull(userNameField.getText())) {
+//					JOptionPane.showConfirmDialog(mainFrame, 
+//							"请输入用户名", "提示", 
+//							JOptionPane.CLOSED_OPTION);
+//					
+//					return;
+//				}
+//				
+//				if (StringUtils.isNull(passwordField.getText())) {
+//					JOptionPane.showConfirmDialog(mainFrame, 
+//							"请输入密码", "提示", 
+//							JOptionPane.CLOSED_OPTION);
+//					
+//					return;
+//				}
+//				
+//				setDialogVisiable(true);
+//				
+//				HashMap<String, String> map = new HashMap<String, String>();
+//				map.put("username", userNameField.getText());
+//				map.put("password", passwordField.getText());
+//				OkHttpUtils.post(URLConstans.URL_LOGIN, map, new NetCallback(){
+//
+//					@Override
+//					public void onResponseSuccess(String result){
+//						setDialogVisiable(false);
+//						
+//						LoginEntity loginEntity = JsonUtils.formJson(
+//								result, LoginEntity.class);
+//						// 保存账户信息
+//						UserDataEntity userEntity = new UserDataEntity();
+//						userEntity.setUsername(userNameField.getText());
+//						try {
+//							FileUtils.writeToFile(
+//									PathConstants.DATA_PATH, 
+//									DataConstants.USERNAME, 
+//									JsonUtils.toJson(userEntity));
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//						// 切换页面
+//						QueryFrame queryInterface = new QueryFrame();
+//						queryInterface.showGUI();
+//						
+//						mainFrame.setVisible(false);
+//					}
+//
+//					@Override
+//					public void onResponseFail(String result, String failReason) {
+//						setDialogVisiable(false);
+//						
+//						JOptionPane.showConfirmDialog(mainFrame, 
+//								failReason, "提示", 
+//								JOptionPane.CLOSED_OPTION);
+//					}
+//
+//					@Override
+//					public void onFail(Call arg0, IOException arg1) {
+//						setDialogVisiable(false);
+//					}
+//					
+//				});
+				
+				// 切换页面
 				QueryFrame queryInterface = new QueryFrame();
 				queryInterface.showGUI();
 				
 				mainFrame.setVisible(false);
-				
-//				OkHttpUtils.get("https://raw.github.com/square/" +
-//						"okhttp/master/README.md", new NetCallback(){
-//
-//							@Override
-//							public void onFailure(Call arg0, IOException arg1) {
-//								super.onFailure(arg0, arg1);
-//							}
-//
-//							@Override
-//							public void onResponse(Call arg0, Response arg1)
-//									throws IOException {
-//								super.onResponse(arg0, arg1);
-//							}
-//					
-//				});
-				
-//				OkHttpUtils.download("http://www.zhlzw.com/UploadFiles/Article_UploadFiles/201204/20120412123904521.jpg", 
-//						new FileDownloadCallback() {
-//					
-//					@Override
-//					public void downloadSuccess(String path) {
-//						
-//					}
-//					
-//					@Override
-//					public void downloadFail(String error) {
-//						
-//					}
-//				});
-				
-//				CarTypeEntity entity = new CarTypeEntity();
-//				entity.setAaa("111");
-//				entity.setBbb("999");
-//				entity.setCcc("333");
-//				entity.setDdd("444");
-//				ArrayList<String> list = new ArrayList<>();
-//				list.add("111");
-//				list.add("333");
-//				list.add("555");
-//				list.add("999");
-//				entity.setEee(list);
-//				
-//				try {
-//					FileUtils.writeToFile(PathConstants.DATA_PATH, 
-//							DataConstants.CAR_TYPE, 
-//							JsonUtils.toJson(entity));
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
-				
-//				try {
-//					String content = FileUtils.readFile(
-//							PathConstants.DATA_PATH, 
-//							DataConstants.CAR_TYPE);
-//					CarTypeEntity entity = JsonUtils.formJson(
-//							content, CarTypeEntity.class); 
-//					
-//					System.out.println("entity=" + entity.getEee());
-//				} catch (Exception e2) {
-//					// TODO: handle exception
-//					e2.printStackTrace();
-//				}
 			}
 		});
 	    
@@ -271,4 +299,22 @@ public class LoginFrame {
 	    jPanel.add(exitButton);
 	}
 	
+	private void prepareDialog(){
+		dialog = new WaitingDialog(width / 2 - 100, 
+				height / 2 - 50, 200, 100, Color.BLACK);
+		dialog.setTransparent(0.5f);
+		dialog.setVisible(false);
+		
+		mainFrame.add(dialog);
+	}
+	
+	private void setDialogVisiable(boolean visible){
+		if (visible) {
+			dialog.setVisible(true);
+			dialog.startAnimation();
+		} else {
+			dialog.setVisible(false);
+			dialog.stopAnimation();
+		}
+	}
 }
