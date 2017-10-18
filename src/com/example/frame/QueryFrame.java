@@ -100,7 +100,7 @@ public class QueryFrame {
 		
 		mainFrame.add(carTypeLabel);
 		
-		carTypeBox = new JComboBox<>();
+		carTypeBox = new JComboBox<String>();
 		carTypeBox.setLocation(70, 30);
 		carTypeBox.setSize(120, 25);
 		carTypeBox.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 14));

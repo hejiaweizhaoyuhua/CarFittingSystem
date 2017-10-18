@@ -8,9 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -18,10 +18,10 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.example.callback.FileDownloadCallback;
 import com.example.component.RadiusJButton;
-import com.example.network.OkHttpUtils;
 
 public class QueryThirdPanel extends BaseJPanel{
 	private JComboBox<String> fittingsCode;
@@ -46,7 +46,7 @@ public class QueryThirdPanel extends BaseJPanel{
 	}
 	
 	private void prepareFittingsQuery(){
-		fittingsCode = new JComboBox<>();
+		fittingsCode = new JComboBox<String>();
 		fittingsCode.setLocation(20, 10);
 		fittingsCode.setSize(150, 25);
 		fittingsCode.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 14));
@@ -104,7 +104,7 @@ public class QueryThirdPanel extends BaseJPanel{
 		
 		add(carTypeJLabel);
 		
-		carTypeResult = new JList<>();
+		carTypeResult = new JList<String>();
 		carTypeResult.setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
 		carTypeResult.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 12));
@@ -114,6 +114,22 @@ public class QueryThirdPanel extends BaseJPanel{
 		carTypesScrollPane.setSize(250, 370);
 		carTypesScrollPane.setBorder(BorderFactory.createLineBorder(
 				Color.BLACK, 1));
+		
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		for(int i = 0; i < 10; i++){
+			model.addElement("¹þ¹þ¹þ");
+		}
+		carTypeResult.setModel(model);
+		carTypeResult.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					System.out.println("valueChanged-->first-->" + e.getFirstIndex());
+					System.out.println("valueChanged-->last-->" + e.getLastIndex());
+				}
+			}
+		});
 		
 		add(carTypesScrollPane);
 	}
@@ -131,19 +147,19 @@ public class QueryThirdPanel extends BaseJPanel{
 	}
 	
 	private void showPicture(){
-		OkHttpUtils.download("http://www.zhlzw.com/UploadFiles/Article_UploadFiles/201204/20120412123904521.jpg", 
-				new FileDownloadCallback() {
-			
-			@Override
-			public void downloadSuccess(String path) {
-				showImage(path);
-			}
-			
-			@Override
-			public void downloadFail(String error) {
-				
-			}
-		});
+//		OkHttpUtils.download("http://www.zhlzw.com/UploadFiles/Article_UploadFiles/201204/20120412123904521.jpg", 
+//				new FileDownloadCallback() {
+//			
+//			@Override
+//			public void downloadSuccess(String path) {
+//				showImage(path);
+//			}
+//			
+//			@Override
+//			public void downloadFail(String error) {
+//				
+//			}
+//		});
 	}
 	
 	private void showImage(final String path){

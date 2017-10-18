@@ -38,7 +38,7 @@ public class QuerySecondPanel extends BaseJPanel{
 	}
 	
 	private void prepareVINQuery(){
-		VINCode = new JComboBox<>();
+		VINCode = new JComboBox<String>();
 		VINCode.setLocation(20, 10);
 		VINCode.setSize(150, 25);
 		VINCode.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 14));

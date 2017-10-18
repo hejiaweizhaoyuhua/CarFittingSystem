@@ -10,7 +10,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.example.entity.BaseEntity;
 
 public class BaseXmlParser<T extends BaseEntity> extends DefaultHandler{
-	protected List<T> list = new ArrayList<>();
+	protected List<T> list = new ArrayList<T>();
 	// 用来存放每次遍历后的元素名称
 	private String tagName; 
 	// 构建对象

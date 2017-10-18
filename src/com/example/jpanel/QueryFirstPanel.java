@@ -3,11 +3,12 @@ package com.example.jpanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.LayoutManager;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -27,6 +28,7 @@ import com.example.entity.respone.GroupEntity;
 import com.example.entity.respone.SGroupEntity;
 import com.example.network.OkHttpUtils;
 import com.example.utils.JsonUtils;
+import com.example.utils.TimerUtils;
 
 public class QueryFirstPanel extends BaseJPanel{
 	private JLabel carTypeChildLabel;
@@ -80,7 +82,7 @@ public class QueryFirstPanel extends BaseJPanel{
 		
 		add(carTypeChildLabel);
 		
-		carTypeChildList = new JList<>();
+		carTypeChildList = new JList<String>();
 		carTypeChildList.setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
 		carTypeChildList.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 12));
@@ -103,7 +105,7 @@ public class QueryFirstPanel extends BaseJPanel{
 	 * @param audi
 	 */
 	private void getCarCodeAreaData(String car_code, String area){
-		HashMap<String, String> map = new HashMap<>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("type", "list");
 		map.put("car_code", car_code);
 		map.put("area", area);
@@ -117,7 +119,7 @@ public class QueryFirstPanel extends BaseJPanel{
 					carCodeAreaData = entity.getData();
 				}
 				
-				DefaultListModel<String> model = new DefaultListModel<>();
+				DefaultListModel<String> model = new DefaultListModel<String>();
 				for (int i = 0; i < carCodeAreaData.size(); i++) {
 					model.addElement(carCodeAreaData.get(i).getName());
 				}
@@ -145,7 +147,7 @@ public class QueryFirstPanel extends BaseJPanel{
 		
 		add(yearTypeLabel);
 		
-		yearTypeList = new JList<>();
+		yearTypeList = new JList<String>();
 		yearTypeList.setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
 		yearTypeList.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 12));
@@ -163,7 +165,7 @@ public class QueryFirstPanel extends BaseJPanel{
 	}
 	
 	private void getFittingsTypeData(String model_id){
-		HashMap<String, String> map = new HashMap<>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("model_id", model_id);
 		OkHttpUtils.get(URLConstans.URL_GROUP, map, new NetCallback() {
 			
@@ -175,7 +177,7 @@ public class QueryFirstPanel extends BaseJPanel{
 					fittingsTypeDatas = entity.getData();
 				}
 				
-				fittingsTypeModel = new DefaultListModel<>();
+				fittingsTypeModel = new DefaultListModel<String>();
 				for (int i = 0; i < fittingsTypeDatas.size(); i++){
 					fittingsTypeModel.addElement(fittingsTypeDatas.
 							get(i).getName());
@@ -204,7 +206,7 @@ public class QueryFirstPanel extends BaseJPanel{
 		
 		add(fittingsTypeLabel);
 		
-		fittingsTypeList = new JList<>();
+		fittingsTypeList = new JList<String>();
 		fittingsTypeList.setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
 		fittingsTypeList.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 12));
@@ -229,7 +231,7 @@ public class QueryFirstPanel extends BaseJPanel{
 		
 		add(fittingsLabel);
 		
-		fittingsList = new JList<>();
+		fittingsList = new JList<String>();
 		fittingsList.setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
 		fittingsList.setFont(new Font("Î¢ÈíÐ±ºÚ", 0, 12));
@@ -244,7 +246,7 @@ public class QueryFirstPanel extends BaseJPanel{
 	}
 	
 	private void getFittingsData(String group_id){
-		HashMap<String, String> map = new HashMap<>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("group_id", group_id);
 		OkHttpUtils.get(URLConstans.URL_SGROUP, map, new NetCallback() {
 			
@@ -256,7 +258,7 @@ public class QueryFirstPanel extends BaseJPanel{
 					fittingsDatas = entity.getData();
 				}
 				
-				fittingsModel = new DefaultListModel<>();
+				fittingsModel = new DefaultListModel<String>();
 				for(int i = 0; i < fittingsDatas.size(); i++){
 					fittingsModel.addElement(fittingsDatas.get(i).getName());
 				}
@@ -363,7 +365,7 @@ public class QueryFirstPanel extends BaseJPanel{
 				
 				removeListener(2);
 				
-				carCodeAreaModel = new DefaultListModel<>();
+				carCodeAreaModel = new DefaultListModel<String>();
 				int count = e.getLastIndex();
 				for (int i = 0; i < carCodeAreaData.get(count).
 						getModels().size(); i++){
@@ -376,6 +378,14 @@ public class QueryFirstPanel extends BaseJPanel{
 				cleanData4();
 				
 				setListener(2);
+				
+				TimerUtils.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						int count = yearTypeList.getSelectedIndex();
+						System.out.println("count=" + count);
+					}
+				}, 100);
 			}
 		}
 	}
